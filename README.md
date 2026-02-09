@@ -7,12 +7,18 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 <img width="498" height="339" alt="image" src="https://github.com/user-attachments/assets/e85b1178-0a0b-456b-8abd-3bbf8e9d0885" />
 
 ## Features
-* **Device Tracker**: Real-time GPS location updates for your pets.
-* **Battery Monitoring**: Accurate battery level (%) and voltage sensors.
-* **Mode Selection**: Easily switch between tracking modes (Fast, Slow, Live, etc.) using a Select entity.
-* **Remote Control**: Toggle the collar's LED and Buzzer on/off directly from Home Assistant switches.
-* **Status Monitoring**: Binary sensors for Home presence, Charging status, LED state, and Buzzer state.
-* **Device Integration**: All entities are grouped under a single Device for each pet, allowing easy access to controls and status on one screen.
+
+📍 **Device Tracker**: Real-time GPS location updates for your pets.
+
+🔋 **Battery Monitoring**: Accurate battery level (%) and voltage sensors.
+
+🎛️ **Mode Selection**: Easily switch between all 7 tracking modes (Fast, Slow, Live, etc.) using a Select entity.
+
+💡 **Remote Control**: Toggle the collar's LED and Buzzer on/off directly from Home Assistant switches.
+
+🔔 **Status Monitoring**: Binary sensors for Home presence, Charging status, LED state, and Buzzer state.
+
+🐾 **Device Integration**: All entities are grouped under a single Device for each pet, allowing easy access to controls and status on one screen.
 
 ## Installation via HACS
 
