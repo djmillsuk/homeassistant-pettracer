@@ -101,24 +101,22 @@ action:
               option: "Normal"
 ```
 
-### 🏠 Geofence / Zone Control
-Automatically switch to **Fast** mode when your cat leaves home territory, and **Slow** mode when they return to save power.
-
-*Tip: If you have a Smart Cat Flap (like SurePet), you can trigger this based on the flap state for even faster updates!*
+### 🚪 SurePet Smart Flap Integration
+Sync your PetTracer mode with your SurePet cat flap. When the flap detects your pet leaving, switch to **Fast** mode. When they return, switch to **Slow** mode to save battery.
 
 ```yaml
-alias: "Pet: Auto Tracking Mode"
-description: "High refresh rate when away, battery saving when home"
+alias: "Pet: SurePet Flap Sync"
+description: "Switch mode based on home/away presence from SurePet flap"
 trigger:
-  - platform: zone
-    entity_id: device_tracker.fluffy_tracker
-    zone: zone.home
-    event: leave
+  - platform: state
+    entity_id: binary_sensor.fluffy_presence
+    from: "on"
+    to: "off"
     id: "left_home"
-  - platform: zone
-    entity_id: device_tracker.fluffy_tracker
-    zone: zone.home
-    event: enter
+  - platform: state
+    entity_id: binary_sensor.fluffy_presence
+    from: "off"
+    to: "on"
     id: "arrived_home"
 action:
   - service: select.select_option
@@ -130,7 +128,13 @@ action:
   - service: notify.mobile_app_my_phone
     data:
       message: >
-        Fluffy {{ 'left' if trigger.id == 'left_home' else 'arrived' }} home. Tracking set to {{ 'Fast' if trigger.id == 'left_home' else 'Slow' }}.
+        Fluffy left via flap - Tracking set to Fast.
+    enabled: "{{ trigger.id == 'left_home' }}"
+  - service: notify.mobile_app_my_phone
+    data:
+      message: >
+        Fluffy arrived home - Tracking set to Slow.
+    enabled: "{{ trigger.id == 'arrived_home' }}"
 ```
 
 ### 🚨 "Lost Pet" Protocol
