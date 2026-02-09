@@ -4,7 +4,7 @@ DOMAIN = "pettracer"
 CONF_API_KEY = "api_key"
 CONF_EMAIL = "email"
 CONF_PASSWORD = "password"
-UPDATE_INTERVAL_SECONDS = 180
+UPDATE_INTERVAL_SECONDS = 60
 
 API_BASE_URL = "https://portal.pettracer.com/api"
 API_ENDPOINT_LOGIN = "/user/login"
