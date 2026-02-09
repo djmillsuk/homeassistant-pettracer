@@ -41,9 +41,118 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 <img width="1007" height="971" alt="image" src="https://github.com/user-attachments/assets/e94e6c7d-611a-4048-a597-93600a48d01e" />
 <img width="499" height="776" alt="image" src="https://github.com/user-attachments/assets/65077dee-e708-4056-ab2c-d4ac503ca655" />
 
-## Recommended Automations
+## 🤖 Automation Examples
 
-The largest advantage i have seen from automating using petTracer is by also having a SurePet cat flap with the connect hub. Once you integrate this to homeassistant along with pettracer you can switch your cat's collar to slow mode when they are inside and fast when they are out. This means you get the battery saving benefit most of the time from the slow mode and the accuracy of territory mapping in fast mode when your cat it outside...
+Unlock the full potential of your PetTracer integration with these automation ideas. Copy and paste these YAML examples into your `automations.yaml` or use the visual editor.
 
-<img width="498" height="659" alt="image" src="https://github.com/user-attachments/assets/f91a2647-ca55-43aa-be25-bc56d8f027d5" />
-<img width="496" height="658" alt="image" src="https://github.com/user-attachments/assets/41c20e64-609a-439a-9ea2-a04e7327ef4a" />
+### 🔋 Low Battery Power Saver
+Automatically switch to **Slow** mode when the battery drops below 10% to ensure you don't lose contact before you can recharge.
+
+```yaml
+alias: "Pet: Low Battery Saver"
+description: "Switch to Slow mode to save battery when low"
+trigger:
+  - platform: numeric_state
+    entity_id: sensor.fluffy_battery
+    below: 10
+action:
+  - service: select.select_option
+    target:
+      entity_id: select.fluffy_mode
+    data:
+      option: "Slow"
+  - service: notify.mobile_app_my_phone
+    data:
+      message: "Fluffy's battery is low! Switched to Slow mode."
+```
+
+### 🌙 Night & Day Cycle
+Save battery while your pet sleeps at night, and ensure good tracking during the day.
+
+```yaml
+alias: "Pet: Night/Day Cycle"
+description: "Switch to Slow mode at night and Normal in the morning"
+trigger:
+  - platform: time
+    at: "22:00:00"
+    id: "night"
+  - platform: time
+    at: "07:00:00"
+    id: "day"
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: "night"
+        sequence:
+          - service: select.select_option
+            target:
+              entity_id: select.fluffy_mode
+            data:
+              option: "Slow"
+      - conditions:
+          - condition: trigger
+            id: "day"
+        sequence:
+          - service: select.select_option
+            target:
+              entity_id: select.fluffy_mode
+            data:
+              option: "Normal"
+```
+
+### 🏠 Geofence / Zone Control
+Automatically switch to **Fast** mode when your cat leaves home territory, and **Slow** mode when they return to save power.
+
+*Tip: If you have a Smart Cat Flap (like SurePet), you can trigger this based on the flap state for even faster updates!*
+
+```yaml
+alias: "Pet: Auto Tracking Mode"
+description: "High refresh rate when away, battery saving when home"
+trigger:
+  - platform: zone
+    entity_id: device_tracker.fluffy_tracker
+    zone: zone.home
+    event: leave
+    id: "left_home"
+  - platform: zone
+    entity_id: device_tracker.fluffy_tracker
+    zone: zone.home
+    event: enter
+    id: "arrived_home"
+action:
+  - service: select.select_option
+    target:
+      entity_id: select.fluffy_mode
+    data:
+      option: >
+        {{ 'Fast' if trigger.id == 'left_home' else 'Slow' }}
+  - service: notify.mobile_app_my_phone
+    data:
+      message: >
+        Fluffy {{ 'left' if trigger.id == 'left_home' else 'arrived' }} home. Tracking set to {{ 'Fast' if trigger.id == 'left_home' else 'Slow' }}.
+```
+
+### 🚨 "Lost Pet" Protocol
+Create a script to maximize visibility if your pet goes missing. This sets the tracker to **Live** mode and turns on the **LED** and **Buzzer** to help locate them.
+
+```yaml
+script:
+  find_fluffy:
+    alias: "Find Fluffy Protocol"
+    sequence:
+      - service: select.select_option
+        target:
+          entity_id: select.fluffy_mode
+        data:
+          option: "Live"
+      - service: switch.turn_on
+        target:
+          entity_id: switch.fluffy_led
+      - service: switch.turn_on
+        target:
+          entity_id: switch.fluffy_buzzer
+      - service: notify.mobile_app_my_phone
+        data:
+          message: "Emergency tracking activated! LED and Buzzer are ON."
+```
