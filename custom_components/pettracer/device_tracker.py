@@ -69,20 +69,34 @@ class PetTracerTracker(CoordinatorEntity, TrackerEntity):
     @property
     def battery_level(self) -> int | None:
         """Return the battery level of the device."""
-        # 'bat' seems to be in mV (e.g., 4141). Typical LiPo 3700-4200.
-        # Simple mapping: (val - 3600) / 6.
+        # 'bat' seems to be in mV (e.g., 4141).
         val = self.check_details.get("bat")
         if val is not None:
             try:
                 mv = int(val)
-                pct = int((mv - 3600) / 6)
-                return max(0, min(100, pct))
+                e = max(3000, min(mv, 4150))
+                
+                t = 0
+                if e >= 4000:
+                    t = (e - 4000) / 150 * 17 + 83
+                elif e >= 3900:
+                    t = (e - 3900) / 100 * 16 + 67
+                elif e >= 3840:
+                    t = (e - 3840) / 60 * 17 + 50
+                elif e >= 3760:
+                    t = (e - 3760) / 80 * 16 + 34
+                elif e >= 3600:
+                    t = (e - 3600) / 160 * 17 + 17
+                else:
+                    t = 0
+                
+                return round(t)
             except (ValueError, TypeError):
                 pass
         return None
 
     @property
-    def source_type(self) -> SourceType:
+    def source_type(self) -> str:
         """Return the source type."""
         return SourceType.GPS
 

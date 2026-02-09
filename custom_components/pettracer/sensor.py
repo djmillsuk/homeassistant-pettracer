@@ -58,8 +58,23 @@ class PetTracerBatterySensor(CoordinatorEntity, SensorEntity):
         if val is not None:
             try:
                 mv = int(val)
-                pct = int((mv - 3600) / 6)
-                return max(0, min(100, pct))
+                e = max(3000, min(mv, 4150))
+                
+                t = 0
+                if e >= 4000:
+                    t = (e - 4000) / 150 * 17 + 83
+                elif e >= 3900:
+                    t = (e - 3900) / 100 * 16 + 67
+                elif e >= 3840:
+                    t = (e - 3840) / 60 * 17 + 50
+                elif e >= 3760:
+                    t = (e - 3760) / 80 * 16 + 34
+                elif e >= 3600:
+                    t = (e - 3600) / 160 * 17 + 17
+                else:
+                    t = 0
+                
+                return round(t)
             except (ValueError, TypeError):
                 pass
         return None
