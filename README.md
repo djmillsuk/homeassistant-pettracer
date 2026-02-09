@@ -109,12 +109,12 @@ alias: "Pet: SurePet Flap Sync"
 description: "Switch mode based on home/away presence from SurePet flap"
 trigger:
   - platform: state
-    entity_id: binary_sensor.fluffy_presence
+    entity_id: binary_sensor.fluffy
     from: "on"
     to: "off"
     id: "left_home"
   - platform: state
-    entity_id: binary_sensor.fluffy_presence
+    entity_id: binary_sensor.fluffy
     from: "off"
     to: "on"
     id: "arrived_home"
@@ -125,16 +125,6 @@ action:
     data:
       option: >
         {{ 'Fast' if trigger.id == 'left_home' else 'Slow' }}
-  - service: notify.mobile_app_my_phone
-    data:
-      message: >
-        Fluffy left via flap - Tracking set to Fast.
-    enabled: "{{ trigger.id == 'left_home' }}"
-  - service: notify.mobile_app_my_phone
-    data:
-      message: >
-        Fluffy arrived home - Tracking set to Slow.
-    enabled: "{{ trigger.id == 'arrived_home' }}"
 ```
 
 ### 🚨 "Lost Pet" Protocol
