@@ -2,9 +2,12 @@
 
 DOMAIN = "pettracer"
 CONF_API_KEY = "api_key"
+CONF_EMAIL = "email"
+CONF_PASSWORD = "password"
 UPDATE_INTERVAL_SECONDS = 180
 
 API_BASE_URL = "https://portal.pettracer.com/api"
+API_ENDPOINT_LOGIN = "/user/login"
 API_ENDPOINT_IMAGE = "/image/"
 API_ENDPOINT_GET_CCS = "/map/getccs"
 API_ENDPOINT_SET_MODE = "/map/setccmode"
