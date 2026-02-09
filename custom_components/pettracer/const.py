@@ -16,12 +16,12 @@ API_ENDPOINT_SET_MODE = "/map/setccmode"
 # Mode-Live: 11, Mode-Fast: 1, Mode-Normal: 2, Mode-Slow: 3, 
 # Mode-Slow-Plus: 7, Mode-Fast-Plus: 8, Mode-Normal-Plus: 14
 MODE_MAP = {
-    "Fast": 1,
-    "Normal": 2,
     "Slow": 3,
     "Slow+": 7,
+    "Normal": 2,
+    "Normal+": 14,
+    "Fast": 1,
     "Fast+": 8,
     "Live": 11,
-    "Normal+": 14,
 }
 MODE_MAP_INV = {v: k for k, v in MODE_MAP.items()}
