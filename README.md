@@ -1,5 +1,7 @@
 # PetTracer Home Assistant Integration
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=djmillsuk&repository=homeassistant-pettracer&category=integration)
+
 A custom component for Home Assistant to integrate the PetTracer GPS cat tracking system.
 
 ## Features
@@ -24,8 +26,4 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 1. Go to **Settings > Devices & Services**.
 2. Click **Add Integration**.
 3. Search for **PetTracer**.
-4. Enter your **PetTracer Bearer Token**.
-
-To get your token:
-1. Log in to the PetTracer portal.
-2. Use developer tools or the Bruno collection to inspect network requests and find the `Authorization: Bearer <token>` header.
+4. Enter your **PetTracer Username** and **Password**.
