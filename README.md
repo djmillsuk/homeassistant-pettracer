@@ -30,7 +30,7 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 3. Search for **PetTracer**.
 4. Enter your **PetTracer Username** and **Password**.
 
-<img width="397" height="1037" alt="image" src="https://github.com/user-attachments/assets/c0c288db-a18a-432b-8ff7-b7247c863cc5" />
+<img width="1007" height="971" alt="image" src="https://github.com/user-attachments/assets/e94e6c7d-611a-4048-a597-93600a48d01e" />
 <img width="499" height="776" alt="image" src="https://github.com/user-attachments/assets/65077dee-e708-4056-ab2c-d4ac503ca655" />
 
 ## Recommended Automations
