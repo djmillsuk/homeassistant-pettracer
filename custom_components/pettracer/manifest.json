@@ -1,7 +1,7 @@
 {
   "domain": "pettracer",
   "name": "PetTracer",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "documentation": "https://github.com/djmillsuk/homeassistant-pettracer",
   "requirements": [],
   "dependencies": [],
