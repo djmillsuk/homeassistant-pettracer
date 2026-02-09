@@ -8,6 +8,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.entity import DeviceInfo
 
 from .const import DOMAIN, API_BASE_URL, API_ENDPOINT_IMAGE
 from .coordinator import PetTracerCoordinator
@@ -40,6 +41,20 @@ class PetTracerTracker(CoordinatorEntity, TrackerEntity):
     def unique_id(self) -> str:
         """Return the unique ID."""
         return f"{self._dev_id}_tracker"
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the device info."""
+        details = self.check_details.get("details", {})
+        name = details.get("name") or f"Pet {self._dev_id}"
+        return DeviceInfo(
+            identifiers={(DOMAIN, str(self._dev_id))},
+            name=name,
+            manufacturer="PetTracer",
+            model="GPS Collar",
+            sw_version=self.check_details.get("sw"),
+            configuration_url="https://portal.pettracer.com/",
+        )
 
     @property
     def check_details(self) -> dict:

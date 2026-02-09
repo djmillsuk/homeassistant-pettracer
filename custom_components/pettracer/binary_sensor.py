@@ -9,6 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.entity import DeviceInfo
 
 from .const import DOMAIN
 from .coordinator import PetTracerCoordinator
@@ -54,6 +55,20 @@ class PetTracerBinarySensor(CoordinatorEntity, BinarySensorEntity):
     def unique_id(self) -> str:
         """Return the unique ID."""
         return f"{self._dev_id}_{self._key}"
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the device info."""
+        details = self.coordinator.data.get(self._dev_id, {}).get("details", {})
+        name = details.get("name") or f"Pet {self._dev_id}"
+        return DeviceInfo(
+            identifiers={(DOMAIN, str(self._dev_id))},
+            name=name,
+            manufacturer="PetTracer",
+            model="GPS Collar",
+            sw_version=self.coordinator.data.get(self._dev_id, {}).get("sw"),
+            configuration_url="https://portal.pettracer.com/",
+        )
 
     @property
     def name(self) -> str:
