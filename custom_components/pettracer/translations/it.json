@@ -1,0 +1,22 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Connetti a PetTracer",
+                "description": "Inserisci le tue credenziali PetTracer.",
+                "data": {
+                    "username": "Nome utente",
+                    "password": "Password"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Impossibile connettersi",
+            "invalid_auth": "Autenticazione non valida",
+            "unknown": "Errore imprevisto"
+        },
+        "abort": {
+            "already_configured": "Il dispositivo è già configurato"
+        }
+    }
+}

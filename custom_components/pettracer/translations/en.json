@@ -3,9 +3,10 @@
         "step": {
             "user": {
                 "title": "Connect to PetTracer",
-                "description": "Please enter your PetTracer Bearer Token.",
+                "description": "Please enter your PetTracer credentials.",
                 "data": {
-                    "api_key": "Bearer Token"
+                    "username": "Username",
+                    "password": "Password"
                 }
             }
         },
