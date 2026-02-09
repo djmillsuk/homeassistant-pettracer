@@ -29,7 +29,5 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 4. Enter your **PetTracer Username** and **Password**.
 
 <img width="498" height="339" alt="image" src="https://github.com/user-attachments/assets/e85b1178-0a0b-456b-8abd-3bbf8e9d0885" />
-
 <img width="397" height="1037" alt="image" src="https://github.com/user-attachments/assets/c0c288db-a18a-432b-8ff7-b7247c863cc5" />
-
 <img width="499" height="776" alt="image" src="https://github.com/user-attachments/assets/65077dee-e708-4056-ab2c-d4ac503ca655" />
