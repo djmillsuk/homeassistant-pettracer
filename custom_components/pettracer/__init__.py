@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN
 from .coordinator import PetTracerCoordinator
 
-PLATFORMS: list[Platform] = [Platform.DEVICE_TRACKER, Platform.SENSOR, Platform.SELECT, Platform.BINARY_SENSOR]
+PLATFORMS: list[Platform] = [Platform.DEVICE_TRACKER, Platform.SENSOR, Platform.SELECT, Platform.BINARY_SENSOR, Platform.SWITCH]
 
 _LOGGER = logging.getLogger(__name__)
 

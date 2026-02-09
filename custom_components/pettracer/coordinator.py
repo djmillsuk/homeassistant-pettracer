@@ -156,3 +156,53 @@ class PetTracerCoordinator(DataUpdateCoordinator):
             if response.status == 401:
                 raise Exception("401 Unauthorized")
             response.raise_for_status()
+
+    async def set_led(self, dev_id: str, turn_on: bool):
+        """Set the collar LED state."""
+        # 1 = On, 2 = Off
+        state_cmd = 1 if turn_on else 2
+        await self._set_led_request(dev_id, state_cmd)
+        await self.async_request_refresh()
+
+    async def _set_led_request(self, dev_id: str, state_cmd: int):
+        await self._ensure_token()
+        # /api/map/setccled/{collarId}/{1/0} - user specified 1/2 in request text
+        url = f"{API_BASE_URL}/map/setccled/{dev_id}/{state_cmd}"
+        headers = {
+            "Authorization": f"Bearer {self.access_token}",
+        }
+        
+        async with self.session.post(url, headers=headers) as response:
+            if response.status == 401:
+                self.access_token = None
+                await self._ensure_token()
+                headers["Authorization"] = f"Bearer {self.access_token}"
+                async with self.session.post(url, headers=headers) as retry_resp:
+                    retry_resp.raise_for_status()
+            else:
+                response.raise_for_status()
+
+    async def set_buzzer(self, dev_id: str, turn_on: bool):
+        """Set the collar buzzer state."""
+        # 1 = On, 2 = Off
+        state_cmd = 1 if turn_on else 2
+        await self._set_buzzer_request(dev_id, state_cmd)
+        await self.async_request_refresh()
+
+    async def _set_buzzer_request(self, dev_id: str, state_cmd: int):
+        await self._ensure_token()
+        # /api/map/setccbuz/{collarId}/{1/0} - user specified 1/2 in request text
+        url = f"{API_BASE_URL}/map/setccbuz/{dev_id}/{state_cmd}"
+        headers = {
+            "Authorization": f"Bearer {self.access_token}",
+        }
+        
+        async with self.session.post(url, headers=headers) as response:
+            if response.status == 401:
+                self.access_token = None
+                await self._ensure_token()
+                headers["Authorization"] = f"Bearer {self.access_token}"
+                async with self.session.post(url, headers=headers) as retry_resp:
+                    retry_resp.raise_for_status()
+            else:
+                response.raise_for_status()
