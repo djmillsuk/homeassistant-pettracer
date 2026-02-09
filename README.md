@@ -35,7 +35,7 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 
 ## Recommended Automations
 
-The largest advantage i have seen from automating using petTracer is by also haveing a SurePet cat flap with the connect hub. Once you integrate this to homeassistant along with pettracer you can switch your cat's collar to slow mode when they are inside and fast when they are out. This means you get the battery saving benefit most of the time from the slow mode and the accuracy of territory mapping in fast mode when your cat it outside...
+The largest advantage i have seen from automating using petTracer is by also having a SurePet cat flap with the connect hub. Once you integrate this to homeassistant along with pettracer you can switch your cat's collar to slow mode when they are inside and fast when they are out. This means you get the battery saving benefit most of the time from the slow mode and the accuracy of territory mapping in fast mode when your cat it outside...
 
 <img width="498" height="659" alt="image" src="https://github.com/user-attachments/assets/f91a2647-ca55-43aa-be25-bc56d8f027d5" />
 <img width="496" height="658" alt="image" src="https://github.com/user-attachments/assets/41c20e64-609a-439a-9ea2-a04e7327ef4a" />
