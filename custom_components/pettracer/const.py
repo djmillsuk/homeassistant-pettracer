@@ -5,6 +5,7 @@ CONF_API_KEY = "api_key"
 UPDATE_INTERVAL_SECONDS = 180
 
 API_BASE_URL = "https://portal.pettracer.com/api"
+API_ENDPOINT_IMAGE = "/image/"
 API_ENDPOINT_GET_CCS = "/map/getccs"
 API_ENDPOINT_SET_MODE = "/map/setccmode"
 

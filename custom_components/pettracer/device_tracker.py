@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
+from .const import DOMAIN, API_BASE_URL, API_ENDPOINT_IMAGE
 from .coordinator import PetTracerCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -85,6 +85,16 @@ class PetTracerTracker(CoordinatorEntity, TrackerEntity):
     def source_type(self) -> SourceType:
         """Return the source type."""
         return SourceType.GPS
+
+    @property
+    def entity_picture(self) -> str | None:
+        """Return the entity picture to use in the frontend."""
+        details = self.check_details.get("details", {})
+        # API returns the image name
+        image_name = details.get("image") or details.get("img")
+        if image_name:
+            return f"{API_BASE_URL}{API_ENDPOINT_IMAGE}{image_name}"
+        return None
 
     @property
     def extra_state_attributes(self) -> dict:
