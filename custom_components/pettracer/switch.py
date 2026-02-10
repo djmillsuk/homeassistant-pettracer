@@ -40,6 +40,11 @@ class PetTracerLEDSwitch(CoordinatorEntity, SwitchEntity):
         super().__init__(coordinator)
         self._dev_id = dev_id
         
+        # Initialize state from coordinator data
+        data = self.coordinator.data.get(self._dev_id, {})
+        self._last_contact = data.get("lastContact")
+        self._attr_is_on = data.get("led") is True
+        
     @property
     def unique_id(self) -> str:
         """Return the unique ID."""
@@ -66,20 +71,32 @@ class PetTracerLEDSwitch(CoordinatorEntity, SwitchEntity):
         base_name = details.get("name") or f"Pet {self._dev_id}"
         return f"{base_name} LED"
 
-    @property
-    def is_on(self) -> bool | None:
-        """Return true if switch is on."""
-        data = self.coordinator.data.get(self._dev_id, {})
-        # Assuming 'led' matches the state in getccs
-        return data.get("led") is True
-
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the switch on."""
+        # Optimistic update
+        self._attr_is_on = True
+        self.async_write_ha_state()
+        
         await self.coordinator.set_led(self._dev_id, True)
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the switch off."""
+        # Optimistic update
+        self._attr_is_on = False
+        self.async_write_ha_state()
+        
         await self.coordinator.set_led(self._dev_id, False)
+
+    def _handle_coordinator_update(self) -> None:
+        """Handle coordinator update."""
+        data = self.coordinator.data.get(self._dev_id, {})
+        new_contact = data.get("lastContact")
+        
+        # Only update state if lastContact has changed
+        if new_contact != self._last_contact:
+            self._last_contact = new_contact
+            self._attr_is_on = data.get("led") is True
+            self.async_write_ha_state()
 
 
 class PetTracerBuzzerSwitch(CoordinatorEntity, SwitchEntity):
@@ -92,6 +109,11 @@ class PetTracerBuzzerSwitch(CoordinatorEntity, SwitchEntity):
         """Initialize the switch."""
         super().__init__(coordinator)
         self._dev_id = dev_id
+        
+        # Initialize state from coordinator data
+        data = self.coordinator.data.get(self._dev_id, {})
+        self._last_contact = data.get("lastContact")
+        self._attr_is_on = data.get("buz") is True
         
     @property
     def unique_id(self) -> str:
@@ -119,17 +141,29 @@ class PetTracerBuzzerSwitch(CoordinatorEntity, SwitchEntity):
         base_name = details.get("name") or f"Pet {self._dev_id}"
         return f"{base_name} Buzzer"
 
-    @property
-    def is_on(self) -> bool | None:
-        """Return true if switch is on."""
-        data = self.coordinator.data.get(self._dev_id, {})
-        # Assuming 'buz' matches the state in getccs
-        return data.get("buz") is True
-
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the switch on."""
+        # Optimistic update
+        self._attr_is_on = True
+        self.async_write_ha_state()
+
         await self.coordinator.set_buzzer(self._dev_id, True)
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the switch off."""
+        # Optimistic update
+        self._attr_is_on = False
+        self.async_write_ha_state()
+
         await self.coordinator.set_buzzer(self._dev_id, False)
+
+    def _handle_coordinator_update(self) -> None:
+        """Handle coordinator update."""
+        data = self.coordinator.data.get(self._dev_id, {})
+        new_contact = data.get("lastContact")
+        
+        # Only update state if lastContact has changed
+        if new_contact != self._last_contact:
+            self._last_contact = new_contact
+            self._attr_is_on = data.get("buz") is True
+            self.async_write_ha_state()

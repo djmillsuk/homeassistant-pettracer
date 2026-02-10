@@ -32,6 +32,16 @@ class PetTracerModeSelect(CoordinatorEntity, SelectEntity):
         """Initialize the selector."""
         super().__init__(coordinator)
         self._dev_id = dev_id
+        
+        # Initialize state from coordinator data
+        data = self.coordinator.data.get(self._dev_id, {})
+        self._last_contact = data.get("lastContact")
+        
+        current_val = data.get("mode") or data.get("cmdNr")
+        if current_val in MODE_MAP_INV:
+            self._attr_current_option = MODE_MAP_INV[current_val]
+        else:
+            self._attr_current_option = None
 
     @property
     def unique_id(self) -> str:
@@ -64,23 +74,30 @@ class PetTracerModeSelect(CoordinatorEntity, SelectEntity):
         """Return a set of selectable options."""
         return list(MODE_MAP.keys())
 
-    @property
-    def current_option(self) -> str | None:
-        """Return the selected entity option to represent the entity state."""
-        # Find the mode in the data
-        data = self.coordinator.data.get(self._dev_id, {})
-        # Assuming the API returns 'mode' as an integer matching the command number
-        current_val = data.get("mode") or data.get("cmdNr")
-        
-        if current_val in MODE_MAP_INV:
-            return MODE_MAP_INV[current_val]
-        
-        # Fallback if we can't find it or it's unknown
-        return None
-
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
         val = MODE_MAP.get(option)
         if val is not None:
+            # Optimistic update
+            self._attr_current_option = option
+            self.async_write_ha_state()
+            
             await self.coordinator.set_collar_mode(self._dev_id, val)
+
+    def _handle_coordinator_update(self) -> None:
+        """Handle coordinator update."""
+        data = self.coordinator.data.get(self._dev_id, {})
+        new_contact = data.get("lastContact")
+        
+        # Only update state if lastContact has changed
+        if new_contact != self._last_contact:
+            self._last_contact = new_contact
+            
+            current_val = data.get("mode") or data.get("cmdNr")
+            if current_val in MODE_MAP_INV:
+                self._attr_current_option = MODE_MAP_INV[current_val]
+            else:
+                self._attr_current_option = None
+                
+            self.async_write_ha_state()
 
