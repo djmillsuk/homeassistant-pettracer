@@ -20,9 +20,12 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 
 ## Installation via HACS
 
-Click this button
-
+1. Ensure [HACS](https://hacs.xyz/) is installed.
+2. Click this button
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=djmillsuk&repository=homeassistant-pettracer&category=integration)
+3. Close the modal, find **PetTracer** in the list, and click **Download**.
+4. Restart Home Assistant.
+5. See the configuration section of this readme
 
 **OR**
 
@@ -34,6 +37,7 @@ Click this button
 6. Click **Add**.
 7. Close the modal, find **PetTracer** in the list, and click **Download**.
 8. Restart Home Assistant.
+9. See the configuration section of this readme
 
 ## Configuration
 
