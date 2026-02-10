@@ -1,7 +1,5 @@
 # PetTracer Home Assistant Integration
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=djmillsuk&repository=homeassistant-pettracer&category=integration)
-
 A custom component for Home Assistant to integrate the PetTracer GPS cat tracking system.
 
 <img width="498" height="467" alt="image" src="https://github.com/user-attachments/assets/b9029867-5e85-41b0-ae55-fdd9ce54edcc" />
@@ -21,6 +19,12 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 🐾 **Device Integration**: All entities are grouped under a single Device for each pet, allowing easy access to controls and status on one screen.
 
 ## Installation via HACS
+
+Click this button
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=djmillsuk&repository=homeassistant-pettracer&category=integration)
+
+**OR**
 
 1. Ensure [HACS](https://hacs.xyz/) is installed.
 2. Go to **HACS > Integrations**.
