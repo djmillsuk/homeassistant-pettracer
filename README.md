@@ -2,6 +2,8 @@
 
 A custom component for Home Assistant to integrate the PetTracer GPS cat tracking system.
 
+**THIS INTEGRATION WAS DISCUSSED WITH THE PETTRACER TEAM TO GET THEIR APPROVAL TO PROCEED BEFORE DEVELOPMENT**
+
 <img width="599" height="551" alt="image" src="https://github.com/user-attachments/assets/df2b91de-b1f2-4009-9d13-40c5ab0a8664" />
 
 ## Features
