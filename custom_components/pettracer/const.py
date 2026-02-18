@@ -7,9 +7,11 @@ CONF_PASSWORD = "password"
 UPDATE_INTERVAL_SECONDS = 60
 
 API_BASE_URL = "https://portal.pettracer.com/api"
+API_WS_URL = "wss://pt.pettracer.com/sc"
 API_ENDPOINT_LOGIN = "/user/login"
 API_ENDPOINT_IMAGE = "/image/"
 API_ENDPOINT_GET_CCS = "/map/getccs"
+API_ENDPOINT_GET_HOMESTATIONS = "/user/gethomestations"
 API_ENDPOINT_SET_MODE = "/map/setccmode"
 
 # Modes mapping from collection.bru

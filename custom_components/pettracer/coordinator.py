@@ -17,15 +17,28 @@ from .const import (
     DOMAIN,
     UPDATE_INTERVAL_SECONDS,
     API_BASE_URL,
+    API_WS_URL,
     API_ENDPOINT_GET_CCS,
+    API_ENDPOINT_GET_HOMESTATIONS,
     API_ENDPOINT_SET_MODE,
     API_ENDPOINT_LOGIN,
     CONF_API_KEY,
     CONF_EMAIL,
     CONF_PASSWORD,
 )
+from .stomp_client import StompClient
 
 _LOGGER = logging.getLogger(__name__)
+
+# Helper to ensure we have list of ints
+def extract_device_ids(ids: list) -> list[int]:
+    res = []
+    for x in ids:
+        try:
+             res.append(int(x))
+        except:
+             pass
+    return res
 
 class PetTracerCoordinator(DataUpdateCoordinator):
     """Class to manage fetching PetTracer data."""
@@ -47,6 +60,69 @@ class PetTracerCoordinator(DataUpdateCoordinator):
         # If we have an API key, treat it as the access token initially
         self.access_token = self.api_key
         self.session = async_get_clientsession(hass)
+        self.ws_client: StompClient | None = None
+
+    async def start_websocket(self) -> None:
+        """Start the WebSocket connection."""
+        _LOGGER.debug("Initializing WebSocket connection")
+        if not self.access_token:
+            _LOGGER.warning("Cannot start WebSocket without access token")
+            return
+            
+        if self.ws_client:
+            _LOGGER.debug("Stopping existing WebSocket client")
+            await self.ws_client.stop()
+
+        # Gather device IDs for subscription from the current data
+        # Data is a dict of {str_id: device_data}
+        device_ids: list[int] = []
+        if self.data:
+            for k, v in self.data.items():
+                try:
+                    device_ids.append(int(k))
+                except ValueError:
+                    pass
+
+        _LOGGER.debug("Creating new StompClient with device IDs: %s", device_ids)
+        self.ws_client = StompClient(
+            self.hass,
+            API_WS_URL,
+            self.access_token,
+            extract_device_ids(device_ids),
+            self._handle_ws_message
+        )
+        await self.ws_client.start()
+
+    async def stop_websocket(self) -> None:
+        """Stop the WebSocket connection."""
+        if self.ws_client:
+            await self.ws_client.stop()
+            self.ws_client = None
+
+    def _handle_ws_message(self, data: dict) -> None:
+        """Handle incoming WebSocket message."""
+        _LOGGER.debug("Received WebSocket message: %s", data)
+        
+        dev_id = str(data.get("id"))
+        if not dev_id:
+            return
+
+        if self.data is None:
+            self.data = {}
+        
+        # Important: Create a shallow copy of the data to ensure listeners are notified
+        # modifying the dict in place might not trigger updates if reference is same
+        new_data = self.data.copy()
+        
+        if dev_id in new_data:
+            # We also copy the device dict to be safe, though not strictly required if we replaced the top level
+            device_data = new_data[dev_id].copy()
+            device_data.update(data)
+            new_data[dev_id] = device_data
+        else:
+            new_data[dev_id] = data
+            
+        self.async_set_updated_data(new_data)
 
     async def _ensure_token(self):
         """Ensure we have an access token."""
@@ -116,7 +192,30 @@ class PetTracerCoordinator(DataUpdateCoordinator):
                                 continue
                             
                             dev_id = str(dev_id)
+                            # Flag as collar type if not present or explicitly set
+                            if "type" not in device:
+                                device["type"] = 0
                             results[dev_id] = device
+
+                # Fetch list of homestations
+                url = f"{API_BASE_URL}{API_ENDPOINT_GET_HOMESTATIONS}"
+                async with self.session.get(url, headers=headers) as response:
+                    if response.status == 401:
+                         # If collars worked, this should work, but handle gracefully
+                        _LOGGER.warning("401 Unauthorized fetching homestations")
+                    elif response.status == 200:
+                        data = await response.json()
+                        if isinstance(data, list):
+                            for device in data:
+                                dev_id = device.get("id")
+                                if not dev_id:
+                                    continue
+                                
+                                dev_id = str(dev_id)
+                                # Homestations usually type 1
+                                results[dev_id] = device
+                    else:
+                         _LOGGER.warning("Error fetching homestations: %s", response.status)
                     
                     return results
 

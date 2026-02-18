@@ -22,8 +22,12 @@ async def async_setup_entry(
     
     entities = []
     for dev_id, device_data in coordinator.data.items():
-        entities.append(PetTracerBatterySensor(coordinator, dev_id))
-        entities.append(PetTracerVoltageSensor(coordinator, dev_id))
+        # Only add battery sensors for devices with actual battery level > 0
+        # Homestations report battery 0
+        bat_val = device_data.get("bat", 0)
+        if bat_val > 0:
+            entities.append(PetTracerBatterySensor(coordinator, dev_id))
+            entities.append(PetTracerVoltageSensor(coordinator, dev_id))
     
     async_add_entities(entities)
 

@@ -23,7 +23,12 @@ async def async_setup_entry(
     coordinator: PetTracerCoordinator = hass.data[DOMAIN][entry.entry_id]
     
     entities = []
-    for dev_id in coordinator.data:
+    for dev_id, device_data in coordinator.data.items():
+        # Only add switches for collars (type=0 or type missing, but definitely not homestation type=1)
+        # We can also check for presence of controllable flags like 'led' or 'buz'
+        if device_data.get("type") == 1:
+            continue
+            
         entities.append(PetTracerLEDSwitch(coordinator, dev_id))
         entities.append(PetTracerBuzzerSwitch(coordinator, dev_id))
     
@@ -92,11 +97,10 @@ class PetTracerLEDSwitch(CoordinatorEntity, SwitchEntity):
         data = self.coordinator.data.get(self._dev_id, {})
         new_contact = data.get("lastContact")
         
-        # Only update state if lastContact has changed
-        if new_contact != self._last_contact:
-            self._last_contact = new_contact
-            self._attr_is_on = data.get("led") is True
-            self.async_write_ha_state()
+        # Always update state (WebSocket pushes updates without requiring lastContact change)
+        self._last_contact = new_contact
+        self._attr_is_on = data.get("led") is True
+        self.async_write_ha_state()
 
 
 class PetTracerBuzzerSwitch(CoordinatorEntity, SwitchEntity):
@@ -162,8 +166,7 @@ class PetTracerBuzzerSwitch(CoordinatorEntity, SwitchEntity):
         data = self.coordinator.data.get(self._dev_id, {})
         new_contact = data.get("lastContact")
         
-        # Only update state if lastContact has changed
-        if new_contact != self._last_contact:
-            self._last_contact = new_contact
-            self._attr_is_on = data.get("buz") is True
-            self.async_write_ha_state()
+        # Always update state (WebSocket pushes updates without requiring lastContact change)
+        self._last_contact = new_contact
+        self._attr_is_on = data.get("buz") is True
+        self.async_write_ha_state()

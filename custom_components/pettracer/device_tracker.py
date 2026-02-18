@@ -46,12 +46,26 @@ class PetTracerTracker(CoordinatorEntity, TrackerEntity):
     def device_info(self) -> DeviceInfo:
         """Return the device info."""
         details = self.check_details.get("details", {})
-        name = details.get("name") or f"Pet {self._dev_id}"
+        
+        # Determine model/name based on type
+        # Collars typically don't have explicit type in their nested details but root has type=0
+        # Homestations have type=1
+        dev_type = self.check_details.get("type", 0)
+        
+        if dev_type == 1:
+            default_name = f"HomeStation {self._dev_id}"
+            model = "HomeStation"
+            name = details.get("name") or default_name
+        else:
+            default_name = f"Pet {self._dev_id}"
+            model = "GPS Collar"
+            name = details.get("name") or default_name
+
         return DeviceInfo(
             identifiers={(DOMAIN, str(self._dev_id))},
             name=name,
             manufacturer="PetTracer",
-            model="GPS Collar",
+            model=model,
             sw_version=self.check_details.get("sw"),
             configuration_url="https://portal.pettracer.com/",
         )
@@ -65,20 +79,32 @@ class PetTracerTracker(CoordinatorEntity, TrackerEntity):
     def name(self) -> str:
         """Return the name of the device."""
         details = self.check_details.get("details", {})
-        return details.get("name") or f"Pet {self._dev_id}"
+        dev_type = self.check_details.get("type", 0)
+        default_name = f"HomeStation {self._dev_id}" if dev_type == 1 else f"Pet {self._dev_id}"
+        return details.get("name") or default_name
 
     @property
     def latitude(self) -> float | None:
         """Return latitude value of the device."""
-        last_pos = self.check_details.get("lastPos", {})
-        val = last_pos.get("posLat")
+        # For homestations, posLat is at top level
+        # For collars, it's inside lastPos
+        val = self.check_details.get("posLat")
+        if val is None:
+            last_pos = self.check_details.get("lastPos") or {}
+            val = last_pos.get("posLat")
+            
         return float(val) if val is not None else None
 
     @property
     def longitude(self) -> float | None:
         """Return longitude value of the device."""
-        last_pos = self.check_details.get("lastPos", {})
-        val = last_pos.get("posLong")
+        # For homestations, posLong is at top level
+        # For collars, it's inside lastPos
+        val = self.check_details.get("posLong")
+        if val is None:
+             last_pos = self.check_details.get("lastPos") or {}
+             val = last_pos.get("posLong")
+             
         return float(val) if val is not None else None
 
     @property

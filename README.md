@@ -6,6 +6,8 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 
 ## Features
 
+📍 **Live WebSocket Updates**: Unlike polling integrations, this component uses a persistent WebSocket connection to the PetTracer servers. This means location updates, mode changes, and other events are pushed to Home Assistant instantly, reducing reliance on api calls.
+
 📍 **Device Tracker**: Real-time GPS location updates for your pets.
 
 🔋 **Battery Monitoring**: Accurate battery level (%) and voltage sensors.
@@ -17,6 +19,9 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 🔔 **Status Monitoring**: Binary sensors for Home presence, Charging status, LED state, and Buzzer state.
 
 🐾 **Device Integration**: All entities are grouped under a single Device for each pet, allowing easy access to controls and status on one screen.
+
+🏠 **HomeStation Support**: View status and information for your PetTracer HomeStations.
+
 
 ## Installation via HACS
 
@@ -44,7 +49,10 @@ A custom component for Home Assistant to integrate the PetTracer GPS cat trackin
 1. Go to **Settings > Devices & Services**.
 2. Click **Add Integration**.
 3. Search for **PetTracer**.
-4. Enter your **PetTracer Username** and **Password**.
+4. Enter your **PetTracer Email** and **Password**.
+
+### Websocket Connection
+This integration establishes a secure WebSocket connection to the PetTracer servers. This allows Home Assistant to receive updates immediately when your pet's collar reports new data, without waiting for the next polling interval. This is particularly useful for automation triggers based on zone entry/exit or mode changes.
 
 <img width="1007" height="971" alt="image" src="https://github.com/user-attachments/assets/e94e6c7d-611a-4048-a597-93600a48d01e" />
 <img width="499" height="776" alt="image" src="https://github.com/user-attachments/assets/65077dee-e708-4056-ab2c-d4ac503ca655" />

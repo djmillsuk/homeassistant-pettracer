@@ -24,10 +24,17 @@ async def async_setup_entry(
     
     entities = []
     for dev_id, device_data in coordinator.data.items():
-        entities.append(PetTracerBinarySensor(coordinator, dev_id, "home", "Home", BinarySensorDeviceClass.PRESENCE))
-        entities.append(PetTracerBinarySensor(coordinator, dev_id, "led", "LED Status", None, "mdi:led-on"))
-        entities.append(PetTracerBinarySensor(coordinator, dev_id, "buz", "Buzzer Status", None, "mdi:bell-ring"))
-        entities.append(PetTracerBinarySensor(coordinator, dev_id, "chg", "Charging", BinarySensorDeviceClass.BATTERY_CHARGING))
+        if "home" in device_data:
+            entities.append(PetTracerBinarySensor(coordinator, dev_id, "home", "Home", BinarySensorDeviceClass.PRESENCE))
+        
+        if "led" in device_data:
+            entities.append(PetTracerBinarySensor(coordinator, dev_id, "led", "LED Status", None, "mdi:led-on"))
+        
+        if "buz" in device_data:
+            entities.append(PetTracerBinarySensor(coordinator, dev_id, "buz", "Buzzer Status", None, "mdi:bell-ring"))
+        
+        if "chg" in device_data:
+            entities.append(PetTracerBinarySensor(coordinator, dev_id, "chg", "Charging", BinarySensorDeviceClass.BATTERY_CHARGING))
     
     async_add_entities(entities)
 
