@@ -2,7 +2,7 @@
 
 A custom component for Home Assistant to integrate the PetTracer GPS cat tracking system.
 
-<img width="498" height="467" alt="image" src="https://github.com/user-attachments/assets/b9029867-5e85-41b0-ae55-fdd9ce54edcc" />
+<img width="599" height="551" alt="image" src="https://github.com/user-attachments/assets/df2b91de-b1f2-4009-9d13-40c5ab0a8664" />
 
 ## Features
 
@@ -56,6 +56,7 @@ This integration establishes a secure WebSocket connection to the PetTracer serv
 
 <img width="1007" height="971" alt="image" src="https://github.com/user-attachments/assets/e94e6c7d-611a-4048-a597-93600a48d01e" />
 <img width="499" height="776" alt="image" src="https://github.com/user-attachments/assets/65077dee-e708-4056-ab2c-d4ac503ca655" />
+<img width="993" height="843" alt="image" src="https://github.com/user-attachments/assets/210e3a50-029f-474e-8d64-477b25de2e2a" />
 
 ## 🤖 Automation Examples
 
